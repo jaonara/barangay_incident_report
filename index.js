@@ -3,7 +3,7 @@ const app = express();
 
 app.use(express.json());
 
-// Temporary "database"
+// Temp"database"
 let incidents = [];
 let id = 1;
 
