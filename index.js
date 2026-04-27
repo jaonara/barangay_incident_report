@@ -10,8 +10,8 @@ let id = 1;
 /* =========================
    GET ALL INCIDENTS
 ========================= */
-app.get('/', (req, res) => {
-  res.send('Barangay Incident API is running...');
+app.get('/api/incidents', (req, res) => {
+  res.json(incidents);
 });
 
 /* =========================
