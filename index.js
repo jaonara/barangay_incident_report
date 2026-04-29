@@ -75,9 +75,8 @@ app.put('/api/incidents/:id', (req, res) => {
     return res.status(404).json({ message: 'Incident not found' });
   }
 
-  const { status, description, location } = req.body;
+  const { status, description, location, reporter_name, contact_number, incident_type } = req.body;
 
-  // Optional: validate status
   const allowedStatus = ['pending', 'resolved'];
   if (status && !allowedStatus.includes(status)) {
     return res.status(400).json({ message: 'Invalid status' });
@@ -86,13 +85,15 @@ app.put('/api/incidents/:id', (req, res) => {
   if (status) incident.status = status;
   if (description) incident.description = description;
   if (location) incident.location = location;
+  if (reporter_name) incident.reporter_name = reporter_name;
+  if (contact_number) incident.contact_number = contact_number;
+  if (incident_type) incident.incident_type = incident_type;
 
   res.json({
     message: 'Incident updated successfully',
     updated: incident,
   });
 });
-
 /* =========================
    DELETE INCIDENT
 ========================= */
