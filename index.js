@@ -1,4 +1,4 @@
-const cors = require('cors')
+const cors = require('cors');
 const express = require('express');
 const app = express();
 
@@ -10,17 +10,24 @@ let incidents = [];
 let id = 1;
 
 /* =========================
-   GET ALL INCIDENTS
+   ROOT
 ========================= */
 app.get('/', (req, res) => {
   res.send('Welcome to the Barangay Incident Report API!');
 });
 
 /* =========================
+   GET ALL INCIDENTS
+========================= */
+app.get('/api/incidents', (req, res) => {
+  res.json(incidents);
+});
+
+/* =========================
    GET INCIDENT BY ID
 ========================= */
 app.get('/api/incidents/:id', (req, res) => {
-  const incident = incidents.find((i) => i.id == req.params.id);
+  const incident = incidents.find((i) => i.id === parseInt(req.params.id));
 
   if (!incident) {
     return res.status(404).json({ message: 'Incident not found' });
@@ -62,7 +69,7 @@ app.post('/api/incidents', (req, res) => {
    UPDATE INCIDENT
 ========================= */
 app.put('/api/incidents/:id', (req, res) => {
-  const incident = incidents.find((i) => i.id == req.params.id);
+  const incident = incidents.find((i) => i.id === parseInt(req.params.id));
 
   if (!incident) {
     return res.status(404).json({ message: 'Incident not found' });
@@ -70,7 +77,12 @@ app.put('/api/incidents/:id', (req, res) => {
 
   const { status, description, location } = req.body;
 
-  // Only allow safe updates
+  // Optional: validate status
+  const allowedStatus = ['pending', 'resolved'];
+  if (status && !allowedStatus.includes(status)) {
+    return res.status(400).json({ message: 'Invalid status' });
+  }
+
   if (status) incident.status = status;
   if (description) incident.description = description;
   if (location) incident.location = location;
@@ -87,7 +99,7 @@ app.put('/api/incidents/:id', (req, res) => {
 app.delete('/api/incidents/:id', (req, res) => {
   const initialLength = incidents.length;
 
-  incidents = incidents.filter((i) => i.id != req.params.id);
+  incidents = incidents.filter((i) => i.id !== parseInt(req.params.id));
 
   if (incidents.length === initialLength) {
     return res.status(404).json({ message: 'Incident not found' });
